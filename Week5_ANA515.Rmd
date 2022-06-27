@@ -1,0 +1,51 @@
+---
+title: "Week5 Activity - ANA515"
+author: "Akhil Pardeshi"
+date: '2022-06-26'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+installed.packages('tidyverse')
+library(tidyverse)
+```
+
+## Data Set Description
+This Data set consists of all the media mentions of democratic party leaders that were participating in the primaries of 2020.
+This Data is based on media mentions for 2020 Democratic primary since December 30, 2018 across CNN, Fox News, and MSNBC. The TV News archive collects data by splitting coverage into 15s clips. This Dataset is saved in a .csv format - hence separated by comma.I am hoping to answer the question of how much percentage of media coverage can be correlated by the standing of the particular politician.
+
+
+```{r, echo=FALSE}
+
+data1<- read.csv('https://raw.githubusercontent.com/fivethirtyeight/data/master/media-mentions-2020/online_weekly.csv')
+onlineW<- data.frame(data1)
+
+onlineW$pct_of_all_candidate_stories<- onlineW$pct_of_all_candidate_stories*100
+onlineW$query <- NULL
+
+
+```
+
+## Visualization 1 - Box Plot
+This visualization shows us the popularity box plot of the candidates who are mentioned for >20% in the media stories and helps us understand at a glance how the distribution is spread out. This plot (along with the filtering) shows us the distribution of the top candidates and their media popularity
+
+```{r, echo=TRUE}
+
+
+filteredData<- filter(onlineW,pct_of_all_candidate_stories>20)
+
+ggplot(filteredData, aes(name, pct_of_all_candidate_stories)) + geom_boxplot(fill = "blue")+
+  scale_y_continuous("Percentage", breaks= seq(20,100, by=5))+
+  labs(title = "Box Plot for 20% or more Media Mentions", x = "Names Of Candidates")
+
+```
+
+## Visualization 2 - Bar Chart for number of entries aove 20%
+This Data visualization shows how many enteries do the candidates have over 20% amongst the dataset. WHile the previous chart shows the Box Plot for avg. media mentions, this chart would show the "number of times" the person was mentioned over the course of the study.
+
+```{r, echo = TRUE}
+ggplot(data = filteredData) + 
+  geom_bar(mapping = aes(x = name))
+
+```
